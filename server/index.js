@@ -12,12 +12,16 @@ const cookieParser = require("cookie-parser");
 const file = require("express-fileupload");
 const bodyParser = require("body-parser");
 const dbConnection = require("./config/dbConnection");
+const error = require("./middlewares/error");
+const UserRouter = require("./routes/UserRoute");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(file());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/api/v1", UserRouter);
+app.use(error);
 
 dbConnection(URI);
 
