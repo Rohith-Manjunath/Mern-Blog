@@ -1,8 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPen } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { TbPasswordFingerprint } from "react-icons/tb";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
+import {
+  clearError,
+  clearMessage,
+  clearSuccess,
+  registerUser,
+} from "../Redux/UserSlice";
+import { Spinner } from "flowbite-react";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -10,6 +19,12 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
+  const alert = useAlert();
+  const { error, message, success, loading } = useSelector(
+    (state) => state.user
+  );
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,8 +34,22 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(form);
+    dispatch(registerUser(form));
   };
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearError());
+    }
+
+    if (success) {
+      alert.success(message);
+      dispatch(clearSuccess());
+      dispatch(clearMessage());
+      navigate("/login");
+    }
+  }, [error, alert, success, message, dispatch, navigate]);
 
   return (
     <div className="max-w-[70%] w-full mx-auto flex items-center justify-center flex-col gap-4 mt-24">
@@ -77,10 +106,15 @@ const Register = () => {
           </div>
         </div>
         <button
+          disabled={loading}
           type="submit"
           className="w-full tracking-wide font-semibold bg-black text-white py-2 px-2 rounded-md hover:cursor-pointer hover:opacity-80 transition-all duration-200"
         >
-          Register
+          {loading ? (
+            <Spinner color="info" aria-label="Info spinner example" />
+          ) : (
+            "Register"
+          )}
         </button>
 
         <p>
