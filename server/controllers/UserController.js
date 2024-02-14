@@ -26,3 +26,25 @@ exports.Register = catchAsyncErrors(async (req, res, next) => {
 
   jwtToken("Registration successful", 200, newuser, res);
 });
+
+exports.loginUser = catchAsyncErrors(async (req, res, next) => {
+  const { password, email } = req.body;
+
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    return next(new ErrorHandler("User not found", 401));
+  }
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (!isPasswordCorrect) {
+    return next(new ErrorHandler("Invalid credentials", 401));
+  }
+
+  jwtToken("Login successful", 200, user, res);
+});
+
+exports.logout = catchAsyncErrors(async (req, res, next) => {
+  res.clearCookie("token").status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+});

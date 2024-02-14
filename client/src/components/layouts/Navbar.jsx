@@ -1,7 +1,49 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+  clearError,
+  clearMessage,
+  clearSuccess,
+  logout,
+  resetUser,
+} from "../../Redux/UserSlice";
+import { useAlert } from "react-alert";
+import Loader from "./Loader";
 
 const Navbar = () => {
+  const { user, message, loading, error, success } = useSelector(
+    (state) => state.user
+  );
+  const dispatch = useDispatch();
+  const alert = useAlert();
+  const navigate = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(logout());
+    dispatch(resetUser());
+  };
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearError());
+    }
+
+    if (success) {
+      alert.success(message);
+      dispatch(clearSuccess());
+      dispatch(clearMessage());
+      navigate("/login");
+    }
+  }, [error, alert, success, message, dispatch, navigate]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="py-3 px-6 bg-gray-300 flex items-center justify-between">
       <Link to={"/"} className="text-3xl font-semibold text-slate-700 italic">
@@ -36,11 +78,19 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <Link to={"/register"}>
-        <button className="tracking-wide font-semibold bg-black text-white py-2 px-2 rounded-md hover:cursor-pointer hover:opacity-80 transition-all duration-200">
-          Register
-        </button>
-      </Link>
+      {user ? (
+        <Link to={"/login"} onClick={handleLogout}>
+          <button className="tracking-wide font-semibold bg-black text-white py-2 px-2 rounded-md hover:cursor-pointer hover:opacity-80 transition-all duration-200">
+            Logout
+          </button>
+        </Link>
+      ) : (
+        <Link to={"/register"}>
+          <button className="tracking-wide font-semibold bg-black text-white py-2 px-2 rounded-md hover:cursor-pointer hover:opacity-80 transition-all duration-200">
+            Register
+          </button>
+        </Link>
+      )}
     </div>
   );
 };
