@@ -48,3 +48,13 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
     message: "Logged out successfully",
   });
 });
+exports.Me = catchAsyncErrors(async (req, res, next) => {
+  const { user } = req;
+  if (!user) {
+    return next(new ErrorHandler("Please login", 401));
+  }
+
+  res.status(200).json({
+    user,
+  });
+});
