@@ -14,6 +14,8 @@ const bodyParser = require("body-parser");
 const dbConnection = require("./config/dbConnection");
 const error = require("./middlewares/error");
 const UserRouter = require("./routes/UserRoute");
+const BlogRoute = require("./routes/BlogRoute");
+const cloudinary = require("cloudinary");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(file());
@@ -21,7 +23,14 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/v1", UserRouter);
+app.use("/api/v1", BlogRoute);
 app.use(error);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 dbConnection(URI);
 

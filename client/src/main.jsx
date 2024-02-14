@@ -6,7 +6,6 @@ import { PersistGate } from "redux-persist/integration/react"; // Import Persist
 import { store, persistor } from "./Redux/store.jsx";
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
-import { loadUser } from "./Redux/UserSlice.jsx";
 
 const options = {
   position: positions.BOTTOM_CENTER,
@@ -14,8 +13,6 @@ const options = {
   offset: "50px",
   transition: transitions.SCALE,
 };
-
-store.dispatch(loadUser());
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
