@@ -66,6 +66,28 @@ export const logout = createAsyncThunk(
   }
 );
 
+export const loadUser = createAsyncThunk(
+  "user/loadUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch("http://localhost:2000/api/v1/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      return data;
+    } catch (e) {
+      console.error({ message: e.message });
+      return rejectWithValue({ message: e.message });
+    }
+  }
+);
+
 const initialState = {
   user: null,
   message: null,
@@ -116,7 +138,7 @@ export const UserSlice = createSlice({
         state.loading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        const { err, message, success, user } = action.payload;
+        const { err, message, success } = action.payload;
 
         if (err) {
           state.error = err;
@@ -125,7 +147,6 @@ export const UserSlice = createSlice({
           state.loading = false;
           state.success = success;
           state.message = message;
-          state.user = user;
         }
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -148,6 +169,24 @@ export const UserSlice = createSlice({
         }
       })
       .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.err;
+      })
+      .addCase(loadUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loadUser.fulfilled, (state, action) => {
+        const { err, user } = action.payload;
+
+        if (err) {
+          state.error = err;
+          state.loading = false;
+        } else {
+          state.loading = false;
+          state.user = user;
+        }
+      })
+      .addCase(loadUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.err;
       });
