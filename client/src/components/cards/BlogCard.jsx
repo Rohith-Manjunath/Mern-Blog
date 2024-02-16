@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const BlogCard = ({ image, description, title, id }) => {
+const BlogCard = ({ image, description, title, id, user }) => {
   return (
     <div className="border border-slate-300 p-4 rounded-md space-y-4">
       <div className="">
@@ -13,6 +13,9 @@ const BlogCard = ({ image, description, title, id }) => {
       </div>
       <div className="flex flex-col gap-3">
         <h2 className="font-semibold text-[18px] ">{title}</h2>
+        <h3 className="font-semibold text-slate-600  text-sm tracking-wide">
+          By : {user.name}
+        </h3>
         <p className="description overflow-hidden line-clamp-6 text-slate-600">
           {description}
         </p>

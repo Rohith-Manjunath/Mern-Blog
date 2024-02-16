@@ -11,6 +11,9 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(loadUser());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (error) {
       alert.error(error);
       dispatch(clearError());
