@@ -39,6 +39,7 @@ const Blogs = () => {
             description={blog.description}
             image={blog.image}
             key={blog._id}
+            user={blog.user}
             id={blog._id}
           />
         );
