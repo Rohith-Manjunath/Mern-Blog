@@ -1,6 +1,7 @@
 const cloudinary = require("cloudinary");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const Blog = require("../Models/BlogModel");
+const ErrorHandler = require("../utils/ErrorHandler");
 
 exports.createBlog = catchAsyncErrors(async (req, res, next) => {
   const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
@@ -31,9 +32,22 @@ exports.createBlog = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.allBlogs = catchAsyncErrors(async (req, res, next) => {
-  const blogs = await Blog.find();
+  const blogs = await Blog.find().populate("user");
   res.status(200).json({
     success: true,
     blogs,
+  });
+});
+
+exports.getSingleblog = catchAsyncErrors(async (req, res, next) => {
+  const { blogId } = req.params;
+  const blog = await Blog.findById({ _id: blogId });
+  if (!blog) {
+    return next(new ErrorHandler("No blog found with this id", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    blog,
   });
 });

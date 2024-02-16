@@ -15,6 +15,7 @@ import ProtectedRoute from "./components/layouts/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserProtected from "./components/layouts/UserProtected";
 import Blogs from "./pages/Blogs";
+import SingleBlogDetails from "./pages/SingleBlogDetails";
 
 const App = () => {
   return (
@@ -32,6 +33,10 @@ const App = () => {
           </Route>
           <Route element={<UserProtected />}>
             <Route path="/blogs" element={<Blogs />}></Route>
+            <Route
+              path="/blogs/blog/:id"
+              element={<SingleBlogDetails />}
+            ></Route>
           </Route>
         </Routes>
       </BrowserRouter>
