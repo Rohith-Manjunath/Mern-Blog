@@ -8,6 +8,7 @@ const ProtectedRoute = () => {
 
   if (user && !user.isAdmin) {
     alert.error("You can't access this resource");
+    return;
   }
 
   return <>{user && user.isAdmin ? <Outlet /> : <Navigate to={"/"} />}</>;

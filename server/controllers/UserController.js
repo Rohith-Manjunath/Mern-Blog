@@ -1,3 +1,4 @@
+const Blog = require("../Models/BlogModel");
 const User = require("../Models/UserModel");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const { jwtToken } = require("../middlewares/jwtToken");
@@ -56,5 +57,15 @@ exports.Me = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     user,
+  });
+});
+
+exports.myBlogs = catchAsyncErrors(async (req, res, next) => {
+  const { user } = req;
+  const blogs = await Blog.find({ user: user._id });
+
+  res.status(200).json({
+    success: true,
+    blogs,
   });
 });

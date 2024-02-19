@@ -1,43 +1,34 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { clearError, clearSuccess, getSingleBlog } from "../Redux/BlogSlice";
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
 import Loader from "../components/layouts/Loader";
+import { useEffect } from "react";
+import { useGetBlogByIdQuery } from "../Redux/BlogAuth";
+import { useLocation } from "react-router-dom";
 
 const SingleBlogDetails = () => {
-  const path = useLocation().pathname;
-  const id = path.split("/")[3];
-  const dispatch = useDispatch();
-  const { error, blog, loading, success } = useSelector((state) => state.blogs);
-  const alert = useAlert();
-  const { image, description } = blog;
+  const blogId = useLocation().pathname.split("/")[2];
+  const { data, isLoading, isError, error } = useGetBlogByIdQuery(blogId);
 
   useEffect(() => {
-    dispatch(getSingleBlog(id));
-
-    if (error) {
-      alert.error(error);
-      dispatch(clearError());
+    if (isError) {
+      toast.error(error.data.err);
     }
-    if (success) {
-      clearSuccess();
-    }
-  }, [alert, dispatch, id, success, error]);
+  }, [isError, error]);
 
-  if (loading) {
+  if (isLoading) {
     return <Loader />;
   }
 
-  console.log(blog);
+  const blog = data?.blog || null;
 
   return (
-    <div className="w-[80%] mx-auto p-10 border border-slate-300 rounded-md mt-10">
-      <div className=" flex items-center justify-center flex-col gap-5">
-        <img src={image.url} alt="" className="w-[300px]" />
-        <p>{description}</p>
+    <>
+      <div className="w-[80%] mx-auto p-6 flex items-center justify-center  flex-col gap-4 rounded-md border border-slate-400 my-6">
+        <img src={blog.image.url} className="rounded-md" alt="" />
+        <p>{blog.description}</p>
       </div>
-    </div>
+
+      <ToastContainer />
+    </>
   );
 };
 
