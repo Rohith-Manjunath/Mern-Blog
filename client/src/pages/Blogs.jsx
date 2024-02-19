@@ -1,50 +1,40 @@
-import { useAlert } from "react-alert";
-import { useDispatch, useSelector } from "react-redux";
-import Loader from "../components/layouts/Loader";
+import { ToastContainer, toast } from "react-toastify";
+import { useGetBlogsQuery } from "../Redux/BlogAuth";
 import { useEffect } from "react";
-import { clearError, clearSuccess, getAllblogs } from "../Redux/BlogSlice";
+import Loader from "../components/layouts/Loader";
 import BlogCard from "../components/cards/BlogCard";
 
 const Blogs = () => {
-  const alert = useAlert();
-  const dispatch = useDispatch();
-  const { blogs, error, success, loading } = useSelector(
-    (state) => state.blogs
-  );
+  const { data, isLoading, isError, error } = useGetBlogsQuery();
 
   useEffect(() => {
-    dispatch(getAllblogs());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (error) {
-      alert.error(error);
-      dispatch(clearError());
+    if (isError) {
+      toast.error(error.data.err);
     }
-    if (success) {
-      dispatch(clearSuccess());
-    }
-  }, [error, alert, success, dispatch]);
+  }, [isError, error]);
 
-  if (loading) {
+  if (isLoading) {
     return <Loader />;
   }
 
+  const blogs = data?.blogs || [];
+
   return (
-    <div className="w-[90%] mx-auto p-4 grid grid-cols-4 gap-6">
-      {blogs.map((blog) => {
-        return (
+    <>
+      <ToastContainer />
+      <div className="grid grid-cols-4 p-6 gap-4">
+        {blogs.map((item) => (
           <BlogCard
-            title={blog.title}
-            description={blog.description}
-            image={blog.image}
-            key={blog._id}
-            user={blog.user}
-            id={blog._id}
+            key={item._id}
+            image={item.image}
+            title={item.title}
+            description={item.description}
+            id={item._id}
+            user={item.user}
           />
-        );
-      })}
-    </div>
+        ))}
+      </div>
+    </>
   );
 };
 

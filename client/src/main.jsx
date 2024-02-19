@@ -2,10 +2,10 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react"; // Import PersistGate
-import { store, persistor } from "./Redux/store.jsx";
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "./Redux/store.jsx";
 
 const options = {
   position: positions.BOTTOM_CENTER,
