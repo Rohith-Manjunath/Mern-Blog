@@ -23,16 +23,20 @@ const Blogs = () => {
     <>
       <ToastContainer />
       <div className="grid grid-cols-4 p-6 gap-4">
-        {blogs.map((item) => (
-          <BlogCard
-            key={item._id}
-            image={item.image}
-            title={item.title}
-            description={item.description}
-            id={item._id}
-            user={item.user}
-          />
-        ))}
+        {blogs.length > 0 ? (
+          blogs.map((item) => (
+            <BlogCard
+              key={item._id}
+              image={item.image}
+              title={item.title}
+              description={item.description}
+              id={item._id}
+              user={item.user}
+            />
+          ))
+        ) : (
+          <h2>No blogs found</h2>
+        )}
       </div>
     </>
   );

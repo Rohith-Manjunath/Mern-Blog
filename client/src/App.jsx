@@ -11,6 +11,7 @@ import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import MyBlogs from "./pages/MyBlogs";
 import SingleBlogDetails from "./pages/singleBlogDetails";
+import EditBlog from "./pages/EditBlog";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/blogs" element={<Blogs />}></Route>
             <Route path="/my-blogs" element={<MyBlogs />}></Route>
             <Route path="/blog/:blogId" element={<SingleBlogDetails />}></Route>
+            <Route path="/edit/:blogId" element={<EditBlog />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
