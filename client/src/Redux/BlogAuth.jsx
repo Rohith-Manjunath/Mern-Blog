@@ -32,6 +32,14 @@ export const blogsApi = createApi({
         credentials: "include",
       }),
     }),
+    updateBlog: builder.mutation({
+      query: ({ blogId, data }) => ({
+        url: `blog/${blogId}`,
+        method: "PUT",
+        credentials: "include",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -40,4 +48,5 @@ export const {
   useGetBlogByIdQuery,
   useGetMyBlogsQuery,
   useDeleteBlogMutation,
+  useUpdateBlogMutation,
 } = blogsApi;
